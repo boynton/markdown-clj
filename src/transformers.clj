@@ -130,9 +130,9 @@
     [text, state]
     (cond         
     (:code state)
-    (if (or (:eof state) (empty? (string/trim text)))
+    (if (or (:eof state) (not (.startsWith text "    ")))
       ["</code></pre>", (assoc state :code false)]      
-      [(str "\n" (escape-code text)), state])
+      [(str "\n" (escape-code (.substring text 4))), state])
     
     (empty? (string/trim text)) 
     [text, state]
@@ -140,7 +140,7 @@
     :default
     (let [num-spaces (count (take-while (partial = \space) text))]
       (if (> num-spaces 3)
-        [(str "<pre><code>" (escape-code text)), (assoc state :code true)]
+        [(str "<pre><code>" (escape-code  (.substring text 4))), (assoc state :code true)]
         [text, state])))))      
 
 
@@ -154,11 +154,11 @@
       [(str "</code></pre>" (apply str (drop-last 3 trimmed))), (assoc state :code false :codeblock false)]
       
       (= [\`\`\`] (take 3 trimmed))
-      (let [[lang code] (split-with (partial not= \space) (drop 3 trimmed))] 
+      (let [[lang code] (split-with (partial not= \space) (drop 3 trimmed))]
         [(str "<pre><code" (if (not-empty lang) (str " class=\"brush: " (apply str lang) ";\"")) ">" (escape-code (apply str (rest code)))), (assoc state :code true :codeblock true)])
             
     (:codeblock state)
-    [(str "\n" (escape-code text)), state]
+    [(str (escape-code text) "\n"), state]
     :default
     [text, state])))
 
