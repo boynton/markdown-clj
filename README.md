@@ -2,12 +2,14 @@
 
 A markdown parser which compiles to both Clojure and ClojureScript.
 
+**boynton**: Fixed some code block handling to be more consistent with multimarkdown. These are bug fixes for me, YMMV.
+
 ## Installation
 
 Leiningen
 
 ```clojure
-[markdown-clj "0.9.8"]
+[boynton/markdown-clj "0.9.8"]
 ```
 
 Maven
